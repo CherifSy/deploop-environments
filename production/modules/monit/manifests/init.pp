@@ -1,3 +1,3 @@
-class realtime {
-  info("REALTIME base class constructor")  
+class monit {
+  info("Monit base class constructor")  
 }

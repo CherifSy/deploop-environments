@@ -1,3 +1,3 @@
-class realtime {
-  info("REALTIME base class constructor")  
+class spark {
+  info("Spark base class constructor")  
 }

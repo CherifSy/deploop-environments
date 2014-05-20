@@ -47,13 +47,15 @@ node default {
       case $::deploop_category {
         batch: {
           info("[deploop] Node in Production=>Batch path category: ${fqdn}")
-          include base
-          include batch
+          include batch-path
         }
         realtime: {
           info("[deploop] Node in Production=>RealTime path category: ${fqdn}")
-          include base
-          include realtime 
+          include realtime-path
+        }
+        bus: {
+          info("[deploop] Node in Production=>Bus path category: ${fqdn}")
+          include bus-path
         }
         default: {
           info("[deploop] ERROR uncategorized Production node ${fqdn}")

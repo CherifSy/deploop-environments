@@ -1,3 +1,3 @@
-class realtime {
-  info("REALTIME base class constructor")  
+class flume {
+  info("Flume base class constructor")  
 }

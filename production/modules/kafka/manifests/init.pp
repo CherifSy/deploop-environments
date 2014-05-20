@@ -1,3 +1,3 @@
-class realtime {
-  info("REALTIME base class constructor")  
+class kafka {
+  info("Kafka base class constructor")  
 }

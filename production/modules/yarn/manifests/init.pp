@@ -1,3 +1,3 @@
-class realtime {
-  info("REALTIME base class constructor")  
+class yarn {
+  info("Yarn base class constructor")  
 }

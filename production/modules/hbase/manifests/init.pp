@@ -1,3 +1,3 @@
-class realtime {
-  info("REALTIME base class constructor")  
+class hbase {
+  info("Hbase class constructor")  
 }
