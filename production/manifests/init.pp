@@ -15,13 +15,13 @@
 
 # Base configuration variables
 
-$extlookup_datadir="/etc/puppet/manifests/extdata"
+$extlookup_datadir="/etc/puppet/environments/production/extdata"
 $extlookup_precedence = ["site", "default"]
 
 # defaults
 $puppetserver = 'puppet'
+$default_buildoop_yumrepo_uri = extlookup('buildoop_yumrepo_uri', "http://buildooprepo:8080/")
 $jdk_package_name = extlookup("jdk_package_name", "jdk")
-$default_buildoop_yumrepo_uri = "http://buildooprepo:8080/"
 
 # 
 # We set this varialbe for sanity check. Only hosts
