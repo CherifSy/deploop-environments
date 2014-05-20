@@ -21,32 +21,14 @@ $extlookup_precedence = ["site", "default"]
 # defaults
 $puppetserver = 'puppet'
 $jdk_package_name = extlookup("jdk_package_name", "jdk")
-$default_buildoop_yumrepo_uri = "http://192.168.33.1:8080/"
+$default_buildoop_yumrepo_uri = "http://buildooprepo:8080/"
 
-# Base resources for all servers
-case $::operatingsystem {
-	 /(CentOS|RedHat)/: {
-	yumrepo { "buildoop":
-   		baseurl => extlookup("buildoop_yumrepo_uri", $default_buildoop_yumrepo_uri),
-   		descr => "Buildoop Hadoop Ecosystem",
-   		enabled => 1,
-   		gpgcheck => 0,
-	}
-      }
-      default: {
-	 notify{"[deploop] WARNING: running on a non-yum platform -- make sure Buildoop repo is setup": }
-      }
-}
-	
-package { $jdk_package_name:
-	ensure => "installed",
-	alias => "jdk",
-}
-
-exec { "yum makecache":
-  command => "/usr/bin/yum makecache",
-  require => Yumrepo["buildoop"]
-}
+# 
+# We set this varialbe for sanity check. Only hosts
+# inside Puppet environment 'production' have to entry
+# in this catalog.
+#
+$environment_match = 'production'
 
 
 # This main loop is designed in order to handle three kind of 
@@ -61,38 +43,25 @@ exec { "yum makecache":
 # feature, so we don't need modify the puppet.conf agent.
 node default {
   case $::deploop_collection {
-    production: {
+    $environment_match: {
       case $::deploop_category {
         batch: {
           info("[deploop] Node in Production=>Batch path category: ${fqdn}")
-          info("[deploop] config dir ${confdir}")
+          include base
+          include batch
         }
         realtime: {
           info("[deploop] Node in Production=>RealTime path category: ${fqdn}")
+          include base
+          include realtime 
         }
         default: {
           info("[deploop] ERROR uncategorized Production node ${fqdn}")
         }
       }
     }
-    preproduction: {
-      case $::deploop_category {
-        batch: {
-          info("[deploop] Node in Preroduction=>Batch path category: ${fqdn}")
-        }
-        realtime: {
-          info("[deploop] Node in Preproduction=>RealTime path category: ${fqdn}")
-        }
-        default: {
-          info("[deploop] ERROR uncategorized Preproduction node ${fqdn}")
-        }
-      }
-    }
-    test: {
-      info("[deploop] Node in Test collection ${fqdn}")
-    }
     default: {
-      info("[deploop] ERROR no collection for this node ${fqdn}")
+      info("[deploop] ERROR no Production collection for this node ${fqdn}")
       info("[deploop] ERROR the deploop_collection fact is: ${deploop_collection}")
     }
   }
