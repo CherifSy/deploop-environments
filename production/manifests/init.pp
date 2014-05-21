@@ -31,12 +31,12 @@ $jdk_package_name = extlookup("jdk_package_name", "jdk")
 $environment_match = 'production'
 
 
-# This main loop is designed in order to handle three kind of 
-# operational enviroments:
+# This selector is designed in order to handle three kind of 
+# operational enviroments or clusters:
 #
-#  - production: the live enviroment
-#  - preproduction: the staging enviroment
-#  - test: the sandbox and integration test enviroment.
+#  - The batch cluster
+#  - The online or realtime cluster.
+#  - The bus collector cluster.
 #
 # Note: this configuration of environments is based on facts, which
 # are dinamycs in Deploop. 
