@@ -39,8 +39,7 @@ $environment_match = 'production'
 #  - test: the sandbox and integration test enviroment.
 #
 # Note: this configuration of environments is based on facts, which
-# are dinamycs in Deploop. We are not using the "puppet environment"
-# feature, so we don't need modify the puppet.conf agent.
+# are dinamycs in Deploop. 
 node default {
   case $::deploop_collection {
     $environment_match: {
