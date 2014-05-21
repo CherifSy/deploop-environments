@@ -1,7 +1,7 @@
 #
 # Batch path node selector
 #
-class batch-path {
+class batch_path {
 
   info('[deploop] Batch node class')  
   include base
@@ -16,7 +16,6 @@ class batch-path {
     nn1: {
       info("[deploop] Active NameNode NN1 for HDFS HA")
       info("[deploop] The hostname ${fqdn} has NN1 role")
-
       include hadoop_datanode_nn1
     }
     nn2: {

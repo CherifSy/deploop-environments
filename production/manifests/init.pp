@@ -46,7 +46,7 @@ node default {
       case $::deploop_category {
         batch: {
           info("[deploop] Node in Production=>Batch path category: ${fqdn}")
-          include batch-path
+          include batch_path
         }
         realtime: {
           info("[deploop] Node in Production=>RealTime path category: ${fqdn}")
