@@ -30,7 +30,6 @@ $jdk_package_name = extlookup("jdk_package_name", "jdk")
 #
 $environment_match = 'production'
 
-
 # This selector is designed in order to handle three kind of 
 # operational enviroments or clusters:
 #
