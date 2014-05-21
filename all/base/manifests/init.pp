@@ -1,3 +1,6 @@
+#
+# Class with common resources for all enviroments
+#
 class base {
     
   info('[deploop] Base node class')

@@ -4,8 +4,6 @@
 class batch_path {
 
   info('[deploop] Batch node class')  
-  include base
-  include zookeeper
   $hadoop_security_authentication = extlookup('hadoop_security', 'simple')
   $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
   $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
@@ -24,11 +22,11 @@ class batch_path {
     }
     rm: {
       info("[deploop] Standby NameNode NN2 for HDFS HA")
-      include yarn
+      include hadoop_rm
     }
     dn: {
       info("[deploop] HDFS Worker DataNode")
-      include hadoop
+      include hadoop_dn
     }
     default: {
       info("[deploop] ERROR undefined role: ${deploop_role}")

@@ -49,11 +49,11 @@ node default {
         }
         realtime: {
           info("[deploop] Node in Production=>RealTime path category: ${fqdn}")
-          include realtime-path
+          include realtime_path
         }
         bus: {
           info("[deploop] Node in Production=>Bus path category: ${fqdn}")
-          include bus-path
+          include bus_path
         }
         default: {
           info("[deploop] ERROR uncategorized Production node ${fqdn}")
