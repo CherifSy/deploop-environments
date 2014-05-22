@@ -1,7 +1,6 @@
 Puppet Enviroments for Deploop System
 =====================================
 
-'''
  /etc/puppet/environments/
  ├── all
  ├── preproduction
@@ -26,4 +25,3 @@ Puppet Enviroments for Deploop System
  │       ├── spark 
  │       └── storm
  └── test
-'''
