@@ -23,6 +23,8 @@ class hadoop {
   }
 
  class config_files {
+
+    # HDFS Config files
     file { '/etc/hadoop/conf/core-site.xml':
         content => template('hadoop/core-site.xml'),
     }
@@ -54,6 +56,10 @@ class hadoop {
     file { '/etc/hadoop/conf/log4j.properties':
         content => template("hadoop/log4j.properties"),
     }
+
+  # YARN config files
+
+  # MapReduce v2 config files
 
  }
 

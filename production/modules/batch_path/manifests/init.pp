@@ -6,14 +6,10 @@ class batch_path {
   info('[deploop] Batch node class')  
 
     case $::deploop_role {
-    nn1: {
+    nn1, nn2: {
       info("[deploop] Active NameNode NN1 for HDFS HA")
       info("[deploop] The hostname ${fqdn} has NN1 role")
-      include hadoop_nn1
-    }
-    nn2: {
-      info("[deploop] Standby NameNode NN2 for HDFS HA")
-      include hadoop_nn2
+      include hadoop_nn
     }
     rm: {
       info("[deploop] Standby NameNode NN2 for HDFS HA")

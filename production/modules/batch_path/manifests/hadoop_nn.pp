@@ -1,9 +1,9 @@
 #
-# Hadoop NameNode NN1 resouce execution class
+# Hadoop NameNode resouce execution class
 #
-class batch_path::hadoop_nn1 inherits batch_path::hadoop_node {
+class batch_path::hadoop_nn inherits batch_path::hadoop_node {
 
-  info('[deploop] hadoop NameNode NN1 class constructor')  
+  info('[deploop] hadoop NameNode class constructor')  
 
     if ($hadoop_security_authentication == "kerberos") {
       include kerberos::server
