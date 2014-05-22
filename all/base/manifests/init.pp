@@ -1,5 +1,7 @@
 #
-# Class with common resources for all enviroments
+# Class with common resources for all enviroments:
+# 1. The ecosystem repository.
+# 2 The JVM
 #
 class base {
     

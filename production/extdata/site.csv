@@ -15,13 +15,14 @@ hadoop_security_authentication,simple
 hadoop_ha_nameservice,openbuscluster
 
 # FQDN of NameNode
-hadoop_namenode_nn1,mncars001
+hadoop_namenode_nn1,mncars001.condor.local
 
 # FQDN of standby node (for HA)
-hadoop_namenode_nn2,mncars002
+hadoop_namenode_nn2,mncars002.condor.local
 
 # FQDN of ResourceManager node
-hadoop_resourcemanager,mncars003
+hadoop_resourcemanager,mncars003.condor.local
 
+namenode_data_dirs,/cluster/data/1/dfs/dn
 
 

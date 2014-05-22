@@ -5,4 +5,5 @@
 class batch_path::hadoop_node {
   info('[deploop] generic hadoop node class constructor')  
   include base
+
 }
