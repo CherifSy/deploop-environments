@@ -4,23 +4,31 @@
 class batch_path {
 
   info('[deploop] Batch node class')  
+  info("[deploop] Host role(s): ${deploop_role}")  
 
-    case $::deploop_role {
-    nn1, nn2: {
-      info("[deploop] Active NameNode NN1 for HDFS HA")
-      info("[deploop] The hostname ${fqdn} has NN1 role")
-      include hadoop_nn
+  define parseroles{
+    case $name{
+      nn1, nn2: {
+        info("[deploop][${fqdn}] NameNode role")
+        include hadoop_nn
+      }
+      rm: {
+        info("[deploop][${fqdn}] ResourceManager role")
+        include hadoop_rm
+      }
+      dn: {
+        info("[deploop][${fqdn}] DataNode role")
+        include hadoop_dn
+      }
+      hbase-master: {
+        info("[deploop][${fqdn}] Hbase Master role")
+      }
+      default: {
+        info("[deploop][${fqdn}] ERROR undefined role: ${deploop_role}")
+      }
     }
-    rm: {
-      info("[deploop] Standby NameNode NN2 for HDFS HA")
-      include hadoop_rm
-    }
-    dn: {
-      info("[deploop] HDFS Worker DataNode")
-      include hadoop_dn
-    }
-    default: {
-      info("[deploop] ERROR undefined role: ${deploop_role}")
-    }
-  }
+ }
+
+ $array_of_roles = split($deploop_role, ' ')
+ parseroles { $array_of_roles: }
 }

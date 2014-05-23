@@ -3,7 +3,7 @@
 #
 class batch_path::hadoop_dn inherits batch_path::hadoop_node {
 
-  info('[deploop] hadoop NameNode NN1 class constructor')  
+  info('[deploop] hadoop NameNode class constructor')  
 
     if ($hadoop_security_authentication == "kerberos") {
       include kerberos::server

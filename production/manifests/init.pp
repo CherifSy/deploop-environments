@@ -44,25 +44,25 @@ node default {
     $environment_match: {
       case $::deploop_category {
         batch: {
-          info("[deploop] Node in Production=>Batch path category: ${fqdn}")
+          info("[deploop][${fqdn}] Node in Production=>Batch path category")
           include batch_path
         }
         realtime: {
-          info("[deploop] Node in Production=>RealTime path category: ${fqdn}")
+          info("[deploop][${fqdn}] Node in Production=>RealTime path category")
           include realtime_path
         }
         bus: {
-          info("[deploop] Node in Production=>Bus path category: ${fqdn}")
+          info("[deploop][${fqdn}] Node in Production=>Bus path category")
           include bus_path
         }
         default: {
-          info("[deploop] ERROR uncategorized Production node ${fqdn}")
+          info("[deploop][${fqdn}] ERROR uncategorized Production node")
         }
       }
     }
     default: {
-      info("[deploop] ERROR no Production collection for this node ${fqdn}")
-      info("[deploop] ERROR the deploop_collection fact is: ${deploop_collection}")
+      info("[deploop][${fqdn}] ERROR no Production collection for this node")
+      info("[deploop][${fqdn}] ERROR the deploop_collection fact is: ${deploop_collection}")
     }
   }
 }
