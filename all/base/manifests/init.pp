@@ -46,5 +46,21 @@ class base {
   #  command => "/usr/bin/yum makecache",
   #  require => Yumrepo["buildoop"]
   #}
+
+  define parse_entities{
+    case $name{
+      flume: {
+        info("[deploop][${fqdn}] Flume entity")
+        include flume
+      }
+      monit: {
+        info("[deploop][${fqdn}] Monit entity")
+        #include monit
+      }
+      default: {
+        info("[deploop][${fqdn}] ERROR undefined entity: ${deploop_role}")
+      }
+    }
+ }
 }
 

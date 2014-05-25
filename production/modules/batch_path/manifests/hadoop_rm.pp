@@ -4,8 +4,11 @@
 class batch_path::hadoop_rm inherits batch_path::hadoop_node {
 
   info('[deploop] hadoop ResourceManager class constructor')  
+  info("[deploop] Host entities(s): ${deploop_entity}")  
 
-    if ($hadoop_security_authentication == "kerberos") {
+  include base
+
+  if ($hadoop_security_authentication == "kerberos") {
       include kerberos::server
       include kerberos::kdc      
       include kerberos::kdc::admin_server
@@ -16,4 +19,7 @@ class batch_path::hadoop_rm inherits batch_path::hadoop_node {
         dirs => $namenode_data_dirs,    
         auth => $hadoop_security_authentication,
   }
+
+ $array_of_entities = split($deploop_entity, ' ')
+ base::parse_entities{ $array_of_entities: }
 }
