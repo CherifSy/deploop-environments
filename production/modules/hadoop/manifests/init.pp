@@ -171,7 +171,21 @@ class hadoop {
         mode   => 700,
     }
 
+    # 
+    # The local fileystem for JournalNode
+    #
+    $jn_local_dirs = ["/cluster/data/",
+                      "/cluster/data/1/", "/cluster/data/1/dfs/",
+                      '/cluster/data/1/dfs/jn']
+    file { $jn_local_dirs:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 700,
+    }
+
     include config_files_hdfs
+    include config_files_yarn
     include zookeeper
   }
 
@@ -225,6 +239,19 @@ class hadoop {
     }
     file { '/etc/default/hadoop-hdfs-journalnode':
         content => template('hadoop/hadoop-hdfs-journalnode'),
+    }
+
+    # 
+    # The local fileystem for JournalNode
+    #
+    $jn_local_dirs = [ "/cluster/", "/cluster/data/",
+                      "/cluster/data/1/", "/cluster/data/1/dfs/",
+                      '/cluster/data/1/dfs/jn']
+    file { $jn_local_dirs:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 700,
     }
 
     include config_files_hdfs
@@ -295,6 +322,15 @@ class hadoop {
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 700,
+    }
+
+    $yarn_local_dirs = ['/cluster/data/1/yarn/','/cluster/data/1/yarn/local',
+                        '/cluster/data/1/yarn/logs']
+    file { $yarn_local_dirs:
+        ensure => "directory",
+        owner  => "yarn",
+        group  => "yarn",
+        mode   => 744,
     }
 
     include config_files_hdfs

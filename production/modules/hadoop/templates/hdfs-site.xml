@@ -52,7 +52,7 @@
 
     <property>
         <name>dfs.ha.namenodes.<%= @nameservice_id %></name>
-        <value><%= @hadoop_namenode_nn1 %>,<%= @hadoop_namenode_nn2 %></value>
+        <value>nn1,nn2</value>
         <description>list of comma-separated NameNode IDs</description>
     </property>
 
@@ -87,9 +87,7 @@
     <property>
         <name>dfs.namenode.shared.edits.dir</name>
         <value>
-          qjournal://<%= @hadoop_namenode_nn1 %>:8485;
-          <%= @hadoop_namenode_nn2 %>:8485;
-          <%= @hadoop_resourcemanager %>:8485/<%= @nameservice_id %>
+          qjournal://<%= @hadoop_namenode_nn1 %>:8485;<%= @hadoop_namenode_nn2 %>:8485;<%= @hadoop_resourcemanager %>:8485/<%= @nameservice_id %>
         </value>
         <description>This is the The location of the shared storage directory.
             You must specify several JournalNode addresses:
@@ -106,7 +104,7 @@
     </property>
 
     <property>
-        <name>dfs.client.failover.proxy.provider.buildoopcluster</name>
+        <name>dfs.client.failover.proxy.provider.<%= @nameservice_id %></name>
         <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
         <description>The Java class that HDFS clients use to contact the Active NameNode.</description>
     </property> 
