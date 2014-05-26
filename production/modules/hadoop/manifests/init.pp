@@ -57,26 +57,59 @@ class hadoop {
         content => template("hadoop/log4j.properties"),
     }
 
-  # YARN config files
-  class config_files_yarn {
-
   }
 
-  # MapReduce v2 config files
-  class config_files_mrv2 {
+ # YARN config files
+ class config_files_yarn {
 
+  file { '/etc/hadoop/conf/yarn-site.xml':
+    content => template('hadoop/yarn-site.xml'),
+  }
 
+  file { '/etc/hadoop/conf/yarn-env.cmd':
+    content => template('hadoop/yarn-env.cmd'),
+  }
+
+  file { '/etc/hadoop/conf/yarn-env.sh':
+    content => template('hadoop/yarn-env.sh'),
+  }
+
+  file { '/etc/hadoop/conf/capacity-scheduler.xml':
+    content => template('hadoop/capacity-scheduler.xml'),
+  }
+
+  file { '/etc/hadoop/conf/configuration.xsl':
+    content => template('hadoop/configuration.xsl'),
+  }
+ 
+  file { '/etc/hadoop/conf/container-executor.cfg':
+    content => template('hadoop/container-executor.cfg'),
   }
 
  }
+
+ # MapReduce v2 config files
+ class config_files_mrv2 {
+
+  file { '/etc/hadoop/conf/mapred-site.xml':
+    content => template('hadoop/mapred-site.xml'),
+  }
+
+  file { '/etc/hadoop/conf/mapred-env.cmd':
+    content => template('hadoop/mapred-env.cmd'),
+  }
+
+  file { '/etc/hadoop/conf/mapred-env.sh':
+    content => template('hadoop/mapred-env.sh'),
+  }
+ }
+
 
  #
  # The NameNode definition
  # 
  define namenode ($host = $fqdn , 
-                  $auth = 'simple', 
-                  $dirs = ["/tmp/nn"], 
-                  $zk = '') {
+                  $auth = 'simple') {
 
     $hadoop_security_authentication = extlookup('hadoop_security', 'simple')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
@@ -109,7 +142,24 @@ class hadoop {
       require => Package[$namenode_pkgs],
     }
 
+    #
+    # The defaults for the NameNode
+    #
+    file { '/etc/default/hadoop':
+        content => template('hadoop/hadoop'),
+    }
+    file { '/etc/default/hadoop-hdfs-namenode':
+        content => template('hadoop/hadoop-hdfs-namenode'),
+    }
+    file { '/etc/default/hadoop-hdfs-journalnode':
+        content => template('hadoop/hadoop-hdfs-journalnode'),
+    }
+    file { '/etc/default/hadoop-hdfs-zkfc':
+        content => template('hadoop/hadoop-hdfs-zkfc'),
+    }
+
     include config_files_hdfs
+    include zookeeper
   }
 
  #
@@ -151,8 +201,22 @@ class hadoop {
       require => Package[$resourcemananger_pkgs],
     }
 
+    #
+    # The defaults for the ResourceManager
+    #
+    file { '/etc/default/hadoop':
+        content => template('hadoop/hadoop'),
+    }
+    file { '/etc/default/hadoop-yarn-resourcemanager':
+        content => template('hadoop/hadoop-yarn-resourcemanager'),
+    }
+    file { '/etc/default/hadoop-hdfs-journalnode':
+        content => template('hadoop/hadoop-hdfs-journalnode'),
+    }
+
     include config_files_hdfs
     include config_files_yarn
+    include zookeeper
  }
 
  #
@@ -192,6 +256,19 @@ class hadoop {
     file { "/etc/hadoop/conf":
       ensure => "directory",
       require => Package[$datanode_pkgs],
+    }
+
+    #
+    # The defaults for the DataNode
+    #
+    file { '/etc/default/hadoop':
+        content => template('hadoop/hadoop'),
+    }
+    file { '/etc/default/hadoop-hdfs-datanode':
+        content => template('hadoop/hadoop-hdfs-datanode'),
+    }
+    file { '/etc/default/hadoop-yarn-nodemanager':
+        content => template('hadoop/hadoop-yarn-nodemanager'),
     }
 
     include config_files_hdfs

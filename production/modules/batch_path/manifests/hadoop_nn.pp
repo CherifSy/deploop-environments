@@ -16,7 +16,6 @@ class batch_path::hadoop_nn inherits batch_path::hadoop_node {
 
   hadoop::namenode { 'namenode':  
         host => $hadoop_namenode_nn1,  
-        dirs => $namenode_data_dirs,    
         auth => $hadoop_security_authentication,
   }
 
