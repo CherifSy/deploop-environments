@@ -37,7 +37,7 @@ class base {
   file {'java.sh':
     path    => '/etc/profile.d/java.sh',
     ensure  => present,
-    mode    => 0640,
+    mode    => 0755,
     content => template('base/java.sh'),
   }
 

@@ -14,7 +14,7 @@ class zookeeper {
         file {'/var/lib/zookeeper/myid':
           path    => '/var/lib/zookeeper/myid',
           ensure  => present,
-          mode    => 0640,
+          mode    => 0644,
           content => $name? {
             'nn1'  => '1',
             'nn2'  => '2',
