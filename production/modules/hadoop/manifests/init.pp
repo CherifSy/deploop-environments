@@ -22,7 +22,7 @@ class hadoop {
     }
   }
 
- class config_files {
+ class config_files_hdfs {
 
     # HDFS Config files
     file { '/etc/hadoop/conf/core-site.xml':
@@ -58,8 +58,15 @@ class hadoop {
     }
 
   # YARN config files
+  class config_files_yarn {
+
+  }
 
   # MapReduce v2 config files
+  class config_files_mrv2 {
+
+
+  }
 
  }
 
@@ -102,7 +109,7 @@ class hadoop {
       require => Package[$namenode_pkgs],
     }
 
-    include config_files
+    include config_files_hdfs
   }
 
  #
@@ -144,7 +151,8 @@ class hadoop {
       require => Package[$resourcemananger_pkgs],
     }
 
-    include config_files
+    include config_files_hdfs
+    include config_files_yarn
  }
 
  #
@@ -170,7 +178,9 @@ class hadoop {
     # The packages for the DataNode
     #
     $datanode_pkgs = [ 'hadoop-hdfs-datanode', 
-                       'hadoop-yarn-nodemanager']
+                       'hadoop-yarn-nodemanager',
+                       'jsvcdaemon',
+                       'hadoop-mapreduce']
 
     package { $datanode_pkgs:
 	    ensure => 'installed',
@@ -184,7 +194,8 @@ class hadoop {
       require => Package[$datanode_pkgs],
     }
 
-    include config_files
+    include config_files_hdfs
+    include config_files_mrv2
  }
 
 }
