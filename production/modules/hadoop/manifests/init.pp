@@ -158,6 +158,19 @@ class hadoop {
         content => template('hadoop/hadoop-hdfs-zkfc'),
     }
 
+    # 
+    # The local fileystem for HDFS
+    #
+    $nn_local_dirs = [ "/cluster/", "/cluster/metadata/",
+                      "/cluster/metadata/1/", "/cluster/metadata/1/dfs/",
+                      '/cluster/metadata/1/dfs/nn']
+    file { $nn_local_dirs:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 700,
+    }
+
     include config_files_hdfs
     include zookeeper
   }
@@ -269,6 +282,19 @@ class hadoop {
     }
     file { '/etc/default/hadoop-yarn-nodemanager':
         content => template('hadoop/hadoop-yarn-nodemanager'),
+    }
+
+    # 
+    # The local fileystem for HDFS DataNode
+    #
+    $dn_local_dirs = [ "/cluster/", "/cluster/data/",
+                      "/cluster/data/1/", "/cluster/data/1/dfs/",
+                      '/cluster/data/1/dfs/dn']
+    file { $dn_local_dirs:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 700,
     }
 
     include config_files_hdfs
