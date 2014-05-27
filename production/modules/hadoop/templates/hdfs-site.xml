@@ -30,7 +30,7 @@
 
         <property>
                 <name>dfs.datanode.data.dir</name>
-                <value><%= @namenode_data_dirs %></value>
+                <value><%= @namenode_data_dirs.join(",") %></value>
                 <final>true</final>
                 <description>Determines where on the local filesystem an DFS data node 
                     should store its blocks. If this is a comma-delimited list of directories,

@@ -287,8 +287,8 @@ class hadoop {
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
-    $roots = extlookup("datanode_data_dirs", split($datanode_data_dirs, ",")) 
-    $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/namenode", $roots))
+    $roots = extlookup("datanode_data_dirs") 
+    $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
 
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 

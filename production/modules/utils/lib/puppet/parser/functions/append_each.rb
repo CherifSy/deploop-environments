@@ -16,7 +16,8 @@
 # Append a string to every element of an array
 
 Puppet::Parser::Functions::newfunction(:append_each, :type => :rvalue) do |args|
+  prefix = '/cluster/data/'
   suffix = (args[0].is_a? Array) ? args[0].join("") : args[0]
   inputs = (args[1].is_a? Array) ? args[1] : [ args[1] ]
-  inputs.map { |item| item + suffix }
+  inputs.map { |item| prefix + item + suffix }
 end
