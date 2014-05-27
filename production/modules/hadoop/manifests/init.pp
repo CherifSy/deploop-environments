@@ -116,7 +116,6 @@ class hadoop {
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
-    $namenode_data_dirs = extlookup('namenode_data_dirs')
 
     if ($hadoop_security_authentication == 'kerberos') { 
       include hadoop::kerberos
@@ -162,10 +161,15 @@ class hadoop {
     # The local fileystem for HDFS
     #
     $nn_local_dirs = [ "/cluster/", "/cluster/metadata/",
-                      "/cluster/metadata/1/", "/cluster/metadata/1/dfs/",
-                      '/cluster/metadata/1/dfs/nn']
-    file { $nn_local_dirs:
+                      "/cluster/metadata/1/", "/cluster/metadata/1/dfs/"]
+    file {$nn_local_dirs:
         ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 755,
+    }
+    file {'/cluster/metadata/1/dfs/nn':
+         ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 700,
@@ -175,17 +179,23 @@ class hadoop {
     # The local fileystem for JournalNode
     #
     $jn_local_dirs = ["/cluster/data/",
-                      "/cluster/data/1/", "/cluster/data/1/dfs/",
-                      '/cluster/data/1/dfs/jn']
-    file { $jn_local_dirs:
-        ensure => "directory",
+                      "/cluster/data/1/", "/cluster/data/1/dfs/"]
+    file {'/cluster/data/1/dfs/jn':
+         ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 700,
     }
+    file { $jn_local_dirs:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 755,
+    }
 
     include config_files_hdfs
     include config_files_yarn
+    include config_files_mrv2
     include zookeeper
   }
 
@@ -202,7 +212,6 @@ class hadoop {
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
-    $namenode_data_dirs = extlookup('namenode_data_dirs')
 
     if ($hadoop_security_authentication == 'kerberos') { 
       include hadoop::kerberos
@@ -245,17 +254,23 @@ class hadoop {
     # The local fileystem for JournalNode
     #
     $jn_local_dirs = [ "/cluster/", "/cluster/data/",
-                      "/cluster/data/1/", "/cluster/data/1/dfs/",
-                      '/cluster/data/1/dfs/jn']
-    file { $jn_local_dirs:
-        ensure => "directory",
+                      "/cluster/data/1/", "/cluster/data/1/dfs/"]
+    file {'/cluster/data/1/dfs/jn':
+         ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 700,
     }
+    file { $jn_local_dirs:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 755,
+    }
 
     include config_files_hdfs
     include config_files_yarn
+    include config_files_mrv2
     include zookeeper
  }
 
@@ -272,7 +287,10 @@ class hadoop {
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
-    $namenode_data_dirs = extlookup('namenode_data_dirs')
+    $roots = extlookup("datanode_data_dirs", split($datanode_data_dirs, ",")) 
+    $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/namenode", $roots))
+
+    info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
     if ($hadoop_security_authentication == 'kerberos') { 
       include hadoop::kerberos
@@ -318,22 +336,23 @@ class hadoop {
                       "/cluster/data/1/", "/cluster/data/1/dfs/",
                       '/cluster/data/1/dfs/dn']
     file { $dn_local_dirs:
-        ensure => "directory",
-        owner  => "hdfs",
-        group  => "hdfs",
-        mode   => 700,
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,
     }
 
     $yarn_local_dirs = ['/cluster/data/1/yarn/','/cluster/data/1/yarn/local',
                         '/cluster/data/1/yarn/logs']
     file { $yarn_local_dirs:
-        ensure => "directory",
-        owner  => "yarn",
-        group  => "yarn",
-        mode   => 744,
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
     }
 
     include config_files_hdfs
+    include config_files_yarn
     include config_files_mrv2
  }
 

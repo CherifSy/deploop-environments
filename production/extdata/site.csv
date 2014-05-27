@@ -23,6 +23,7 @@ hadoop_namenode_nn2,mncars002.condor.local
 # FQDN of ResourceManager node
 hadoop_resourcemanager,mncars003.condor.local
 
-namenode_data_dirs,/cluster/data/1/dfs/dn
+# Number of disk per JBOD
+datanode_data_dirs,1,2,3,4,5,6,7,8,9,10,11,12
 
 
