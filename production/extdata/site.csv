@@ -24,7 +24,7 @@ hadoop_namenode_nn2,mncars002.condor.local
 hadoop_resourcemanager,mncars003.condor.local
 
 # Number of disk per JBOD
-#datanode_data_dirs,1,2,3,4,5,6,7,8,9,10,11,12
+# 1,2,3,4,5,6,7,8,9,10,11,12
 datanode_data_dirs,1
 
 
