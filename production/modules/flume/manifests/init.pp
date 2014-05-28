@@ -14,6 +14,7 @@ class flume {
                 'flume-kafka-sink']
 
   package { $flume_pkgs:
+    allow_virtual => false,
 	  ensure => 'installed',
   }
 

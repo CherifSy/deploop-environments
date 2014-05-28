@@ -28,6 +28,7 @@ class base {
 
   # Oracle Sun JDK is the only supported JVM
   package { $jdk_package_name:
+    allow_virtual => false,
 	  ensure => "installed",
 	  alias => "jdk",
   }

@@ -8,12 +8,6 @@ class batch_path::hadoop_rm inherits batch_path::hadoop_node {
 
   include base
 
-  if ($hadoop_security_authentication == "kerberos") {
-      include kerberos::server
-      include kerberos::kdc      
-      include kerberos::kdc::admin_server
-  }
-
   hadoop::resourcemanager{ 'resourcemanager':  
         host => $hadoop_namenode_nn1,  
         dirs => $namenode_data_dirs,    

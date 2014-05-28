@@ -5,26 +5,25 @@
 # Buildoop yum repository, or Spacewalk channel
 buildoop_yumrepo_uri,http://buildooprepo:8080/
 
-# For use OpenJDK or Sun JDK
+# For use OpenJDK or Sun JDK: [jdk|openjdk]
 jdk_package_name,jdk
 
-# We use hadoop security, simple or kerberos
-hadoop_security_authentication,simple
+# Simple mode or secure mode: [simple|kerberos]
+hadoop_security_authentication,kerberos
 
 # Service name for HDFS HA
 hadoop_ha_nameservice,openbuscluster
 
-# FQDN of NameNode
+# FQDN of primary NameNode (HA enabled)
 hadoop_namenode_nn1,mncars001.condor.local
 
-# FQDN of standby node (for HA)
+# FQDN of standby node (HA enabled)
 hadoop_namenode_nn2,mncars002.condor.local
 
 # FQDN of ResourceManager node
 hadoop_resourcemanager,mncars003.condor.local
 
-# Number of disk per JBOD
-# 1,2,3,4,5,6,7,8,9,10,11,12
+# Number of disk per JBOD: 1,2,3,4,5,6,7,8,9,10,11,12
 datanode_data_dirs,1
 
 

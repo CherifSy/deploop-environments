@@ -8,12 +8,6 @@ class batch_path::hadoop_nn inherits batch_path::hadoop_node {
 
   include base
 
-  if ($hadoop_security_authentication == "kerberos") {
-      include kerberos::server
-      include kerberos::kdc      
-      include kerberos::kdc::admin_server
-  }
-
   hadoop::namenode { 'namenode':  
         host => $hadoop_namenode_nn1,  
         auth => $hadoop_security_authentication,

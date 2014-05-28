@@ -55,6 +55,12 @@ node default {
           info("[deploop][${fqdn}] Node in Production=>Bus path category")
           include bus_path
         }
+        kdc: {
+          # This category is only for deploy KDC in the Deploop Master node or
+          # a dedicated system.
+          info("[deploop][${fqdn}] Node in Production=>Key Distribution Center category")
+          include kdc_path
+        }
         default: {
           info("[deploop][${fqdn}] ERROR uncategorized Production node")
         }

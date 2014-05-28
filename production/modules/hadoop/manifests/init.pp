@@ -5,56 +5,40 @@ class hadoop {
 
   # Common definitions for hadoop nodes.
   # They all need these files so we can access hdfs/jobs from any node
-  # 
-  class kerberos {             
-    require kerberos::client   
-  
-    kerberos::host_keytab { "hdfs": 
-      princs => [ "host", "hdfs" ],   
-      spnego => true,          
-      require => Package["hadoop-hdfs"],
-    }
-   
-    kerberos::host_keytab { [ "yarn", "mapred" ]:
-      tag    => "mapreduce",   
-      spnego => true,          
-      require => Package["hadoop-yarn"],
-    }
-  }
 
- class config_files_hdfs {
+  class config_files_hdfs {
 
     # HDFS Config files
     file { '/etc/hadoop/conf/core-site.xml':
-        content => template('hadoop/core-site.xml'),
+      content => template('hadoop/core-site.xml'),
     }
 
     file { '/etc/hadoop/conf/hdfs-site.xml':
-        content => template('hadoop/hdfs-site.xml'),
+      content => template('hadoop/hdfs-site.xml'),
     }
 
     file { '/etc/hadoop/conf/hadoop-env.sh':
-        content => template('hadoop/hadoop-env.sh'),
+      content => template('hadoop/hadoop-env.sh'),
     }
 
     file { '/etc/hadoop/conf/hadoop-env.cmd':
-        content => template('hadoop/hadoop-env.cmd'),
+      content => template('hadoop/hadoop-env.cmd'),
     }
 
     file { '/etc/hadoop/conf/hadoop-metrics.properties':
-        content => template('hadoop/hadoop-metrics.properties'),
+      content => template('hadoop/hadoop-metrics.properties'),
     }
 
     file { '/etc/hadoop/conf/hadoop-metrics2.properties':
-        content => template('hadoop/hadoop-metrics2.properties'),
+      content => template('hadoop/hadoop-metrics2.properties'),
     }
 
     file { '/etc/hadoop/conf/hadoop-policy.xml':
-        content => template('hadoop/hadoop-policy.xml'),
+      content => template('hadoop/hadoop-policy.xml'),
     }
 
     file { '/etc/hadoop/conf/log4j.properties':
-        content => template("hadoop/log4j.properties"),
+      content => template("hadoop/log4j.properties"),
     }
 
   }
@@ -111,16 +95,15 @@ class hadoop {
  define namenode ($host = $fqdn , 
                   $auth = 'simple') {
 
-    $hadoop_security_authentication = extlookup('hadoop_security', 'simple')
+    $hadoop_security_authentication = extlookup('hadoop_security_authentication')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
+    $roots = extlookup("datanode_data_dirs") 
+    $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
+    info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
-    if ($hadoop_security_authentication == 'kerberos') { 
-      include hadoop::kerberos
-    }
-    
     #
     # The packages for the NameNode 
     #
@@ -130,6 +113,7 @@ class hadoop {
                        'hadoop-hdfs-zkfc']
 
     package { $namenode_pkgs:
+      allow_virtual => false,
 	    ensure => 'installed',
     }
 
@@ -207,16 +191,15 @@ class hadoop {
                   $dirs = ["/tmp/nn"], 
                   $zk = '') {
 
-    $hadoop_security_authentication = extlookup('hadoop_security', 'simple')
+    $hadoop_security_authentication = extlookup('hadoop_security_authentication')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
+    $roots = extlookup("datanode_data_dirs") 
+    $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
+    info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
-    if ($hadoop_security_authentication == 'kerberos') { 
-      include hadoop::kerberos
-    }
-    
     #
     # The packages for the ResourceManager
     #
@@ -226,6 +209,7 @@ class hadoop {
                        'hadoop-mapreduce-historyserver']
 
     package { $resourcemananger_pkgs:
+      allow_virtual => false,
 	    ensure => 'installed',
     }
 
@@ -282,20 +266,15 @@ class hadoop {
                   $dirs = ["/tmp/nn"], 
                   $zk = '') {
 
-    $hadoop_security_authentication = extlookup('hadoop_security', 'simple')
+    $hadoop_security_authentication = extlookup('hadoop_security_authentication')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
     $roots = extlookup("datanode_data_dirs") 
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
-
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
-    if ($hadoop_security_authentication == 'kerberos') { 
-      include hadoop::kerberos
-    }
-    
     #
     # The packages for the DataNode
     #
@@ -305,6 +284,7 @@ class hadoop {
                        'hadoop-mapreduce']
 
     package { $datanode_pkgs:
+      allow_virtual => false,
 	    ensure => 'installed',
     }
 
