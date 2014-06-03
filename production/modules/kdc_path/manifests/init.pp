@@ -13,7 +13,11 @@ class kdc_path {
 
     include kerberos
 
-    if ($deploop_role == 'master') {
+   /*
+    * This KDC path is only for futher use. Right now we are to consider the 
+    * KDC is setup by the administrator, without these puppet catalogs.
+    */
+    if ($deploop_role == 'kdc-server') {
       info("[deploop][${fqdn}] Deploop Management and Key Distribution Center node")
       kerberos::kerberos_server{'server':}
     } 
