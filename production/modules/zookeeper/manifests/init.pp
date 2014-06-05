@@ -4,11 +4,11 @@ class zookeeper {
   $hadoop_security_authentication = extlookup('hadoop_security_authentication')
 
   class zookeeper_files_keytab {
-    file {'/etc/zookeeper/conf/keytables/':
+    file {'/etc/zookeeper/conf/security/':
       ensure => "directory",
     }
 
-    file {'/etc/zookeeper/conf/keytables/zookeeper.keytab':
+    file {'/etc/zookeeper/conf/security/zookeeper.keytab':
       ensure => present,
       target => "/var/kerberos/principals/${fqdn}/zookeeper.keytab",
     }

@@ -89,26 +89,26 @@ class hadoop {
  }
 
 class hadoop_files_keytab {
-  file {'/etc/hadoop/conf/keytables/':
+  file {'/etc/hadoop/conf/security/':
     ensure => "directory",
   }
 
-  file {'/etc/hadoop/conf/keytables/hdfs.keytab':
+  file {'/etc/hadoop/conf/security/hdfs.keytab':
     ensure => present,
     target => "/var/kerberos/principals/${fqdn}/hdfs.keytab",
   }
 
-  file {'/etc/hadoop/conf/keytables/yarn.keytab':
+  file {'/etc/hadoop/conf/security/yarn.keytab':
     ensure => present,
     target => "/var/kerberos/principals/${fqdn}/yarn.keytab",
   }
 
-  file {'/etc/hadoop/conf/keytables/mapred.keytab':
+  file {'/etc/hadoop/conf/security/mapred.keytab':
     ensure => present,
     target => "/var/kerberos/principals/${fqdn}/mapred.keytab",
   }
 
-  file {'/etc/hadoop/conf/keytables/HTTP.keytab':
+  file {'/etc/hadoop/conf/security/HTTP.keytab':
     ensure => present,
     target => "/var/kerberos/principals/${fqdn}/HTTP.keytab",
   }
@@ -121,6 +121,7 @@ class hadoop_files_keytab {
                   $auth = 'simple') {
 
     $hadoop_security_authentication = extlookup('hadoop_security_authentication')
+    $realm = extlookup('kdc_realm')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
@@ -222,6 +223,7 @@ class hadoop_files_keytab {
                   $zk = '') {
 
     $hadoop_security_authentication = extlookup('hadoop_security_authentication')
+    $realm = extlookup('kdc_realm')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
@@ -302,6 +304,7 @@ class hadoop_files_keytab {
                   $zk = '') {
 
     $hadoop_security_authentication = extlookup('hadoop_security_authentication')
+    $realm = extlookup('kdc_realm')
     $nameservice_id = extlookup('hadoop_ha_nameservice', 'openbuscluster')
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')

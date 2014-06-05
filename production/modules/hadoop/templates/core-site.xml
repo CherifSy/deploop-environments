@@ -41,12 +41,100 @@
     Kerberos support. Setting a value of simple here disable security</description>
   </property>
 
+
 <% if @hadoop_security_authentication == "kerberos" %>
+
+  <!--                               -->
+  <!-- Hadoop Secure Mode - KERBEROS -->
+  <!--                               -->
+
   <property>
     <name>hadoop.security.authorization</name>
     <value>true</value>
+    <description>causes Hadoop to authorize the client when it makes remote procedure 
+        calls to a server. The access control lists that affect these permissions are 
+        configured via the hadoop-policy.xml file and allow per-service level control. 
+        For instance, it is possible to permit only users placed in the
+        mapred-admin Linux group to invoke APIs that are part of the administration service
+        (the security.admin.operations.protocol.acl policy). When enabling security,
+        this feature should be enabled as well and meaningful ACLs configured.</description>
   </property>
-<% end %>
+
+  <!-- Authentication for Hadoop HTTP web-consoles -->
+
+  <property>
+        <name>hadoop.http.filter.initializers</name>
+        <value>org.apache.hadoop.security.AuthenticationFilterInitializer</value>
+        <description>Similarly to Hadoop RPC, Hadoop HTTP web-consoles can be 
+        configured to require Kerberos authentication using HTTP SPNEGO protocol.
+        This property is the initializer class.
+        </description>
+  </property>  
+
+  <property>
+        <name>hadoop.http.authentication.type</name>
+        <value>kerberos</value>
+        <description>Defines authentication used for the HTTP web-consoles. 
+        The supported values are: simple | kerberos | #AUTHENTICATION_HANDLER_CLASSNAME#
+        </description>
+  </property>  
+
+  <property>
+        <name>hadoop.http.authentication.kerberos.principal</name>
+        <value>HTTP/_HOST@<%= @realm %></value>
+        <description>Indicates the Kerberos principal to be used for 
+        HTTP endpoint when using 'kerberos' authentication. The principal 
+        short name must be HTTP per Kerberos HTTP SPNEGO specification. 
+        The default value is HTTP/_HOST@$LOCALHOST, where _HOST -if present- 
+        is replaced with bind address of the HTTP server.
+        </description>
+  </property> 
+
+  <property>
+        <name>hadoop.http.authentication.kerberos.keytab</name>
+        <value>/etc/hadoop/conf/security/HTTP.keytab</value>
+        <description> Location of the keytab file with the credentials 
+        for the Kerberos principal used for the HTTP endpoint.
+        </description>
+  </property> 
+
+  <property>
+        <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+        <value>false</value>
+        <description>Indicates if anonymous requests are allowed when 
+        using 'simple' authentication. The default value is true.
+        </description>
+   </property> 
+
+   <property>
+        <name>hadoop.http.authentication.cookie.domain</name>
+        <value><%= @realm.downcase %></value>
+        <description>The domain to use for the HTTP cookie that stores 
+        the authentication token. In order to authentiation to work correctly 
+        across all nodes in the cluster the domain must be correctly set. 
+        There is no default value, the HTTP cookie will not have a domain 
+        working only with the hostname issuing the HTTP cookie.
+        </description>
+   </property> 
+
+   <property>
+        <name>hadoop.http.authentication.signature.secret.file</name>
+        <value>/etc/hadoop/conf/security/secret</value>
+        <description>The signature secret file for signing the authentication
+        tokens. The same secret should be used for all nodes in the cluster.
+        </description>
+   </property> 
+
+<!-- change only if default is no used
+    <property>
+        <name>hadoop.http.authentication.token.validity</name>
+        <value>36000</value>
+        <description>Indicates how long (in seconds) an authentication token 
+        is valid before it has to be renewed. The default value is 36000.
+        </description>
+    </property> 
+-->
+<% end %> <!-- hadoop_security_authentication == "kerberos" -->
 
 <% if has_variable?("hadoop_security_group_mapping") %>
   <property>
@@ -66,8 +154,8 @@
     <value><%= data['groups'] %></value>
   </property>
 <% end %>
-
 <% end %>
+
 <% if has_variable?("hadoop_snappy_codec") %>
   <property>
     <name>io.compression.codecs</name>
