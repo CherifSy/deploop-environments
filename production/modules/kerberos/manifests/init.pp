@@ -13,9 +13,16 @@ class kerberos {
   define kerberos_workstation () {
       info("[deploop][${fqdn}] Kerberos Workstation node role")
 
+      $kdc_server = extlookup('kdc_server')
+      $realm = extlookup('kdc_realm')
+
       package {'krb5-workstation':
         allow_virtual => false,
 	      ensure => 'installed',
+      }
+
+      file { '/etc/krb5.conf':
+        content => template('kerberos/krb5.conf'),
       }
   }
 }

@@ -12,5 +12,4 @@ class batch_path::hadoop_node {
       include kerberos
       kerberos::kerberos_workstation{'workstation':}
   }
-
 }

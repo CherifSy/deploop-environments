@@ -88,6 +88,31 @@ class hadoop {
   }
  }
 
+class hadoop_files_keytab {
+  file {'/etc/hadoop/conf/keytables/':
+    ensure => "directory",
+  }
+
+  file {'/etc/hadoop/conf/keytables/hdfs.keytab':
+    ensure => present,
+    target => "/var/kerberos/principals/${fqdn}/hdfs.keytab",
+  }
+
+  file {'/etc/hadoop/conf/keytables/yarn.keytab':
+    ensure => present,
+    target => "/var/kerberos/principals/${fqdn}/yarn.keytab",
+  }
+
+  file {'/etc/hadoop/conf/keytables/mapred.keytab':
+    ensure => present,
+    target => "/var/kerberos/principals/${fqdn}/mapred.keytab",
+  }
+
+  file {'/etc/hadoop/conf/keytables/HTTP.keytab':
+    ensure => present,
+    target => "/var/kerberos/principals/${fqdn}/HTTP.keytab",
+  }
+}
 
  #
  # The NameNode definition
@@ -180,6 +205,11 @@ class hadoop {
     include config_files_hdfs
     include config_files_yarn
     include config_files_mrv2
+
+    if ($hadoop_security_authentication == 'kerberos') { 
+      include hadoop_files_keytab
+    }
+
     include zookeeper
   }
 
@@ -255,6 +285,11 @@ class hadoop {
     include config_files_hdfs
     include config_files_yarn
     include config_files_mrv2
+
+    if ($hadoop_security_authentication == 'kerberos') { 
+      include hadoop_files_keytab
+    }
+
     include zookeeper
  }
 
@@ -334,6 +369,10 @@ class hadoop {
     include config_files_hdfs
     include config_files_yarn
     include config_files_mrv2
+
+    if ($hadoop_security_authentication == 'kerberos') { 
+      include hadoop_files_keytab
+    }
  }
 
 }

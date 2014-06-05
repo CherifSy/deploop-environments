@@ -1,6 +1,19 @@
 class zookeeper {
   info("Zookeeper base class constructor")  
 
+  $hadoop_security_authentication = extlookup('hadoop_security_authentication')
+
+  class zookeeper_files_keytab {
+    file {'/etc/zookeeper/conf/keytables/':
+      ensure => "directory",
+    }
+
+    file {'/etc/zookeeper/conf/keytables/zookeeper.keytab':
+      ensure => present,
+      target => "/var/kerberos/principals/${fqdn}/zookeeper.keytab",
+    }
+  }
+
   #
   # The defaults for Zookeeper
   #
@@ -29,4 +42,9 @@ class zookeeper {
 
   $array_of_roles = split($::deploop_role, ' ')
   create_myid { $array_of_roles: }
+
+  if ($hadoop_security_authentication == 'kerberos') { 
+      include zookeeper_files_keytab
+  }
+
 }
