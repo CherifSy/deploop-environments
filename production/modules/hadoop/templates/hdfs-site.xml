@@ -238,6 +238,16 @@
     <value>HTTP/_HOST@<%= @realm %></value>
   </property> 
 
+  <property>
+    <name>dfs.journalnode.edits.dir</name>
+    <value>/var/lib/hadoop-hdfs/journal</value>
+  </property>
+
+  <property>
+    <name>dfs.journalnode.signature.secret</name>
+    <value>/etc/hadoop/conf/security/secret</value>
+  </property>
+
   <!-- Secure WebHDFS -->
 
   <property>
@@ -254,6 +264,11 @@
     <name>dfs.web.authentication.kerberos.keytab</name>
     <value>/etc/hadoop/conf/security/HTTP.keytab</value>
   </property> 
+
+  <property>
+    <name>dfs.web.authentication.signature.secret</name>
+    <value>/etc/hadoop/conf/security/secret</value>
+  </property>
 
   <% end %> <!-- hadoop_security_authentication == "kerberos" -->
 </configuration>

@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more       -->
+<!-- contributor license agreements.  See the NOTICE file distributed with    -->
+<!-- this work for additional information regarding copyright ownership.      -->
+<!-- The ASF licenses this file to You under the Apache License, Version 2.0  -->
+<!-- (the "License"); you may not use this file except in compliance with     -->
+<!-- the License.  You may obtain a copy of the License at                    -->
+<!--                                                                          -->
+<!--     http://www.apache.org/licenses/LICENSE-2.0                           -->
+<!--                                                                          -->
+<!-- Unless required by applicable law or agreed to in writing, software      -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS,        -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and      -->
+<!-- limitations under the License.                                           -->
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License. See accompanying LICENSE file.
--->
 <configuration>
 
     <property>
@@ -101,6 +103,10 @@
         <value>/var/log/hadoop-yarn/apps</value>
     </property>
 
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+    </property>
     
   <!-- YARN Framework fine tune Resource Management -->
 
@@ -115,12 +121,11 @@
 
   <!-- The following property sets the maximum memory YARN can 
        utilize on the node: -->
-  <!--
-  <property>
+
+  <!-- property>
     <name>yarn.nodemanager.resource.memory-mb</name>
     <value>3557</value>
-  </property>
-  -->
+  </property-->
 
   <!-- The next step is to provide YARN guidance on how to break 
        up the total resources available into Containers. You do this 
@@ -129,12 +134,11 @@
        and thus need (40 GB total RAM) / (20 # of Containers) = 2 GB 
        minimum per container. YARN will allocate Containers with RAM 
        amounts greater than the yarn.scheduler.minimum-allocation-mb.-->
-  <!--
-  <property>
+
+  <!--property>
     <name>yarn.scheduler.minimum-allocation-mb</name>
     <value>2048</value>
-  </property>
-  -->
+  </property-->
 
   <!-- YARN add CPU as a resource: Nodes are configured with a number 
        of “virtual cores” (vcores) and applications give a vcore 
@@ -144,11 +148,97 @@
        yarn.nodemanager.resource.cpu-vcores, and the mapreduce.map.cpu.vcores 
        and mapreduce.reduce.cpu.vcores properties can be used to change 
        the CPU request for MapReduce tasks from the default of 1. -->
-  <!--
-  <property>
+
+  <!--property>
     <name>yarn.nodemanager.resource.cpu-vcores</name>
     <value>2</value>
+  </property-->
+
+<% if @hadoop_security_authentication == "kerberos" %>
+
+  <!--                               -->
+  <!-- Hadoop Secure Mode - KERBEROS -->
+  <!--                               -->
+
+  <!-- ResourceManager security configs -->
+
+  <property>
+    <name>yarn.resourcemanager.keytab</name>
+    <value>/etc/hadoop/conf/security/yarn.keytab</value>
   </property>
-  -->
+
+  <property>
+    <name>yarn.resourcemanager.principal</name>
+    <value>yarn/_HOST@<%= @realm %></value>
+  </property>
+  
+  <!-- NodeManager security configs -->
+
+  <property>
+    <name>yarn.nodemanager.keytab</name>
+    <value>/etc/hadoop/conf/security/yarn.keytab</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.principal</name>
+    <value>yarn/_HOST@<%= @realm %></value>
+  </property>
+  
+  <property>
+    <name>yarn.nodemanager.container-executor.class</name>
+    <value>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.linux-container-executor.group</name>
+    <value>yarn</value>
+  </property>
+  
+  <property>
+    <name>yarn.nodemanager.linux-container-executor.path</name>
+    <value>/usr/lib/hadoop-yarn/bin/container-executor</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.webapp.spnego-principal</name>
+    <value>HTTP/_HOST@<%= @realm %></value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.webapp.spnego-keytab-file</name>
+    <value>/etc/hadoop/conf/security/HTTP.keytab</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.webapp.spnego-principal</name>
+    <value>HTTP/_HOST@<%= @realm %></value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.webapp.spnego-keytab-file</name>
+    <value>/etc/hadoop/conf/security/HTTP.keytab</value>
+  </property>
+
+  <property>
+    <name>jobhistoryserver.webapp.spnego-principal</name>
+    <value>HTTP/_HOST@<%= @realm %></value>
+  </property>
+
+  <property>
+    <name>jobhistoryserver.webapp.spnego-keytab-file</name>
+    <value>/etc/hadoop/conf/security/HTTP.keytab</value>
+  </property>
+
+  <property>
+    <name>yarn.web-proxy.keytab</name>
+    <value>/etc/hadoop/conf/security/wap.keytab</value>
+  </property>
+
+  <property>
+    <name>yarn.web-proxy.principal</name>
+    <value>wap/_HOST@<%= @realm %></value>
+  </property>
+
+<% end %> <!-- hadoop_security_authentication == "kerberos" -->
 
 </configuration>

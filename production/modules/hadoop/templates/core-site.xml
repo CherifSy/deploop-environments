@@ -181,5 +181,50 @@
   </property>
 <% end %>
 
+  <!--property>
+  <name>ha.zookeeper.acl</name>
+    <value>@/etc/hadoop/conf/security/zk-acl.txt</value>
+  </property-->
+
+ <!-- PROXYUSER -->
+
+ <property>
+        <name>hadoop.proxyuser.flume.groups</name>
+        <value>*</value>
+ </property>
+ <property>
+         <name>hadoop.proxyuser.flume.hosts</name>
+         <value>*</value>
+ </property>
+ <property>
+        <name>hadoop.proxyuser.oozie.groups</name>
+        <value>*</value>
+ </property>
+ <property>
+        <name>hadoop.proxyuser.oozie.hosts</name>
+        <value>*</value>
+ </property>
+
+ <property>
+        <name>hadoop.proxyuser.httpfs.hosts</name>
+        <value>*</value>
+ </property>
+ <property>
+        <name>hadoop.proxyuser.httpfs.groups</name>
+        <value>*</value>
+ </property>
+ <property>
+        <name>hadoop.proxyuser.hue.hosts</name>
+        <value>*</value>
+ </property>
+ <property>
+        <name>hadoop.proxyuser.hue.groups</name>
+        <value>*</value>
+ </property>
+ <property>
+        <name>hue.kerberos.principal.shortname</name>
+        <value>hue</value>
+ </property>
+
 </configuration>
 
