@@ -15,31 +15,31 @@ hadoop_security_authentication,kerberos
 hadoop_ha_nameservice,openbuscluster
 
 # FQDN of primary NameNode (HA enabled)
-hadoop_namenode_nn1,mncars001.condor.local
+hadoop_namenode_nn1,openbus-nn1
 
 # FQDN of standby node (HA enabled)
-hadoop_namenode_nn2,mncars002.condor.local
+hadoop_namenode_nn2,openbus-nn2
 
 # FQDN of ResourceManager node
-hadoop_resourcemanager,mncars003.condor.local
+hadoop_resourcemanager,openbus-rm
 
 # Number of disk per JBOD: 1,2,3,4,5,6,7,8,9,10,11,12
 datanode_data_dirs,1
 
 # FQDN KDC Server
-kdc_server,mncarsnas.condor.local
+kdc_server,openbus-deploop
 
 # Realm
 kdc_realm,DEPLOOP.ORG
 
 # HBase master for Batch Layer
-hbase_batch_master,mncars006.condor.local
+hbase_batch_master,serving-01
 
 # HBase master for Speed Layer
-hbase_batch_speed,mncars007.condor.local
+hbase_batch_speed,speed-01
 
 # Storm nimbus
-storm_nimbus,mncars008.condor.local,mncars009.condor.local
+storm_nimbus,speed-01,speed-02
 
 
 
