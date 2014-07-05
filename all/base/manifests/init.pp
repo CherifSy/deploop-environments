@@ -50,11 +50,38 @@ class base {
 	ensure => "installed",
   }
 
+  # FIXME: problem with puppetlabs-stdlib
+  # below an alternative: comment_out_line
+  #
+  #file_line {'etc_sudoers':
+  #  ensure  => present,
+  #  path    => '/etc/sudoers',
+  #  line    => '#Defaults    requiretty',
+  #  match   => 'Defaults    requiretty'
+  #}
+
   # FIXME: recreate cache conditional
   #exec { "yum makecache":
   #  command => "/usr/bin/yum makecache",
   #  require => Yumrepo["buildoop"]
   #}
+
+  # Filename to process and pattern for find
+  # the line for comment out with the character '#'.
+  define comment_out_line ($file, $pattern) {
+   exec { "/bin/sed -i -r -e '/^Defaults\s*requiretty/ s/^/#/' $file":
+    onlyif => "/bin/grep -E '$pattern' '$file'",
+   }
+  }
+
+   # We need to disable the 'requiretty' property
+   # in the sudoers file in order to execute 'sudo'
+   # by means of mcollective-deploop-agent 'execute'
+   # action.
+  comment_out_line { 'sudoers':
+    file => "/etc/sudoers",
+    pattern => "^Defaults\s*requiretty",
+  }
 
   define parse_entities{
     case $name{
