@@ -3,43 +3,43 @@
 # to live in this CSV.
 
 # Buildoop yum repository, or Spacewalk channel
-buildoop_yumrepo_uri,http://buildooprepo:8080/
+buildoop_yumrepo_uri,http://openbus-buildoop.openbus.org:8081/
 
 # For use OpenJDK or Sun JDK: [jdk|openjdk]
 jdk_package_name,jdk
 
 # Simple mode or secure mode: [simple|kerberos]
-hadoop_security_authentication,kerberos
+hadoop_security_authentication,simple
 
 # Service name for HDFS HA
 hadoop_ha_nameservice,openbuscluster
 
 # FQDN of primary NameNode (HA enabled)
-hadoop_namenode_nn1,openbus-nn1
+hadoop_namenode_nn1,openbus-nn1.openbus.org
 
 # FQDN of standby node (HA enabled)
-hadoop_namenode_nn2,openbus-nn2
+hadoop_namenode_nn2,openbus-nn2.openbus.org
 
 # FQDN of ResourceManager node
-hadoop_resourcemanager,openbus-rm
+hadoop_resourcemanager,openbus-rm.openbus.org
 
 # Number of disk per JBOD: 1,2,3,4,5,6,7,8,9,10,11,12
 datanode_data_dirs,1
 
 # FQDN KDC Server
-kdc_server,openbus-deploop
+kdc_server,openbus-deploop.openbus.org
 
 # Realm
-kdc_realm,DEPLOOP.ORG
+kdc_realm,OPENBUS.ORG
 
 # HBase master for Batch Layer
-hbase_batch_master,serving-01
+hbase_batch_master,serving-01.openbus.org
 
 # HBase master for Speed Layer
-hbase_batch_speed,speed-01
+hbase_batch_speed,speed-01.openbus.org
 
 # Storm nimbus
-storm_nimbus,speed-01,speed-02
+storm_nimbus,speed-01,speed-02.openbus.org
 
 
 

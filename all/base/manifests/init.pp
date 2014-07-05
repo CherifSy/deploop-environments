@@ -26,11 +26,12 @@ class base {
     }
   }
 
-  # Oracle Sun JDK is the only supported JVM
+  # Oracle Sun JDK is the only supported JVM by Deploop.
+  # http://wiki.apache.org/hadoop/HadoopJavaVersions
   package { $jdk_package_name:
     allow_virtual => false,
-	  ensure => "installed",
-	  alias => "jdk",
+	ensure => "installed",
+	alias => "jdk",
   }
 
   # System wide JAVA_HOME load. FIXME: the version is hardcoded.
@@ -40,6 +41,13 @@ class base {
     ensure  => present,
     mode    => 0755,
     content => template('base/java.sh'),
+  }
+
+  # This utiliy is used by mcollective-service-agent
+  # for start/stop/status services.
+  package { 'lsof':
+    allow_virtual => false,
+	ensure => "installed",
   }
 
   # FIXME: recreate cache conditional
