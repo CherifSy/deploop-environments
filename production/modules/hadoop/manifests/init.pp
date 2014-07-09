@@ -114,6 +114,7 @@ class hadoop_files_keytab {
   }
 }
 
+
  #
  # The NameNode definition
  # 
@@ -128,6 +129,8 @@ class hadoop_files_keytab {
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
     $roots = extlookup("datanode_data_dirs") 
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
+    $nodemanager_log_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/logs", $roots))
+    $nodemanager_local_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/local", $roots))
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
     #
@@ -167,18 +170,28 @@ class hadoop_files_keytab {
         content => template('hadoop/hadoop-hdfs-zkfc'),
     }
 
-    # 
-    # The local fileystem for HDFS
     #
-    $nn_local_dirs = [ "/cluster/", "/cluster/metadata/",
-                      "/cluster/metadata/1/", "/cluster/metadata/1/dfs/"]
-    file {$nn_local_dirs:
+    # The NameNode local filesystem looks like this if
+    # we are not using redundancy in the JBOD for metatada
+    # or JNs index.
+    #
+    # /cluster/
+    #  └── data
+    #      └── 1
+    #          └── dfs
+    #              ├── jn
+    #              └── nn
+     
+    #
+    # The local fileystem for HDFS in the NameNode
+    #
+    file {[ "/cluster/", "/cluster/data/", "/cluster/data/1/", "/cluster/data/1/dfs/"]:
         ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 755,
     }
-    file {'/cluster/metadata/1/dfs/nn':
+    file {'/cluster/data/1/dfs/nn':
          ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
@@ -188,19 +201,11 @@ class hadoop_files_keytab {
     # 
     # The local fileystem for JournalNode
     #
-    $jn_local_dirs = ["/cluster/data/",
-                      "/cluster/data/1/", "/cluster/data/1/dfs/"]
     file {'/cluster/data/1/dfs/jn':
          ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 700,
-    }
-    file { $jn_local_dirs:
-        ensure => "directory",
-        owner  => "hdfs",
-        group  => "hdfs",
-        mode   => 755,
     }
 
     include config_files_hdfs
@@ -230,6 +235,8 @@ class hadoop_files_keytab {
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
     $roots = extlookup("datanode_data_dirs") 
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
+    $nodemanager_log_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/logs", $roots))
+    $nodemanager_local_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/local", $roots))
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
     #
@@ -266,22 +273,31 @@ class hadoop_files_keytab {
         content => template('hadoop/hadoop-hdfs-journalnode'),
     }
 
+    #
+    # The ResourceManager local filesystem looks like this if
+    # we are not using redundancy in the JBOD for JNs index.
+    #
+    # /cluster/
+    #  └── data
+    #      └── 1
+    #          └── dfs
+    #              └── jn
+     
     # 
     # The local fileystem for JournalNode
     #
-    $jn_local_dirs = [ "/cluster/", "/cluster/data/",
-                      "/cluster/data/1/", "/cluster/data/1/dfs/"]
+    file { [ "/cluster/", "/cluster/data/", "/cluster/data/1/", "/cluster/data/1/dfs/"]:
+        ensure => "directory",
+        owner  => "hdfs",
+        group  => "hdfs",
+        mode   => 755,
+    }
+
     file {'/cluster/data/1/dfs/jn':
          ensure => "directory",
         owner  => "hdfs",
         group  => "hdfs",
         mode   => 700,
-    }
-    file { $jn_local_dirs:
-        ensure => "directory",
-        owner  => "hdfs",
-        group  => "hdfs",
-        mode   => 755,
     }
 
     include config_files_hdfs
@@ -311,6 +327,8 @@ class hadoop_files_keytab {
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
     $roots = extlookup("datanode_data_dirs") 
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
+    $nodemanager_log_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/logs", $roots))
+    $nodemanager_local_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/local", $roots))
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
     #
@@ -348,11 +366,27 @@ class hadoop_files_keytab {
     }
 
     # 
-    # The local fileystem for HDFS DataNode
+    # The local fileystem for HDFS and YARN DataNodes. In this
+    # case we have to use the whole JBOD partitions available.
     #
-    $dn_local_dirs = [ "/cluster/", "/cluster/data/",
-                      "/cluster/data/1/", "/cluster/data/1/dfs/",
-                      '/cluster/data/1/dfs/dn']
+    #    /cluster/
+    #    └── data
+    #        ├── 1
+    #        │   ├── dfs
+    #        │   │   └── dn
+    #        │   └── yarn
+    #        │       ├── local
+    #        │       └── logs
+    #        ├── 2
+    #        ... 
+
+    #
+    # FIXME: This is the most ugly way to create folders. Puppet
+    # cannot create folders recursively. I have to change this poor
+    # way to do that wit a "define and loop parsing", with a new
+    # puppet function or even with exec { "mkdir -p /path" }.
+
+    $dn_local_dirs = [ "/cluster/", "/cluster/data/"]
     file { $dn_local_dirs:
         ensure => 'directory',
         owner  => 'hdfs',
@@ -360,9 +394,168 @@ class hadoop_files_keytab {
         mode   => 755,
     }
 
-    $yarn_local_dirs = ['/cluster/data/1/yarn/','/cluster/data/1/yarn/local',
-                        '/cluster/data/1/yarn/logs']
-    file { $yarn_local_dirs:
+    file { ["/cluster/data/1/", "/cluster/data/1/dfs/", '/cluster/data/1/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/2/", "/cluster/data/2/dfs/", '/cluster/data/2/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/3/", "/cluster/data/3/dfs/", '/cluster/data/3/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/4/", "/cluster/data/4/dfs/", '/cluster/data/4/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/5/", "/cluster/data/5/dfs/", '/cluster/data/5/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/6/", "/cluster/data/6/dfs/", '/cluster/data/6/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/7/", "/cluster/data/7/dfs/", '/cluster/data/7/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/8/", "/cluster/data/8/dfs/", '/cluster/data/8/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+   file { ["/cluster/data/9/", "/cluster/data/9/dfs/", '/cluster/data/9/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/10/", "/cluster/data/10/dfs/", '/cluster/data/10/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/11/", "/cluster/data/11/dfs/", '/cluster/data/11/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ["/cluster/data/12/", "/cluster/data/12/dfs/", '/cluster/data/12/dfs/dn']:
+        ensure => 'directory',
+        owner  => 'hdfs',
+        group  => 'hdfs',
+        mode   => 755,  
+    }
+
+    file { ['/cluster/data/1/yarn/','/cluster/data/1/yarn/local', '/cluster/data/1/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/2/yarn/','/cluster/data/2/yarn/local', '/cluster/data/2/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/3/yarn/','/cluster/data/3/yarn/local', '/cluster/data/3/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/4/yarn/','/cluster/data/4/yarn/local', '/cluster/data/4/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/5/yarn/','/cluster/data/5/yarn/local', '/cluster/data/5/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/6/yarn/','/cluster/data/6/yarn/local', '/cluster/data/6/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/7/yarn/','/cluster/data/7/yarn/local', '/cluster/data/7/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/8/yarn/','/cluster/data/8/yarn/local', '/cluster/data/8/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/9/yarn/','/cluster/data/9/yarn/local', '/cluster/data/9/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/10/yarn/','/cluster/data/10/yarn/local', '/cluster/data/10/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/11/yarn/','/cluster/data/11/yarn/local', '/cluster/data/11/yarn/logs']:
+        ensure => 'directory',
+        owner  => 'yarn',
+        group  => 'yarn',
+        mode   => 755,
+    }
+
+    file { ['/cluster/data/12/yarn/','/cluster/data/12/yarn/local', '/cluster/data/12/yarn/logs']:
         ensure => 'directory',
         owner  => 'yarn',
         group  => 'yarn',

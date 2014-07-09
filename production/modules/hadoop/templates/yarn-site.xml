@@ -85,7 +85,7 @@
             with writes). Thus, individual directories should be configured 
             if possible on different local disks.</description>
         <name>yarn.nodemanager.local-dirs</name>
-        <value>/cluster/data/1/yarn/local</value>
+        <value><%= @nodemanager_local_dirs.join(",") %></value>
     </property>
 
     <property>
@@ -94,8 +94,12 @@
             a directory on each of the JBOD mount points; for example, 
             /data/1/yarn/logs through /data/N/yarn/logs.</description>
         <name>yarn.nodemanager.log-dirs</name>
-        <value>/cluster/data/1/yarn/logs</value>
+        <value><%= @nodemanager_log_dirs.join(",") %></value>
     </property>
+
+    <!-- Pending good configuration:
+    http://hortonworks.com/blog/simplifying-user-logs-management-and-access-in-yarn/
+    -->
 
     <property>
         <description>Where to aggregate logs</description>
