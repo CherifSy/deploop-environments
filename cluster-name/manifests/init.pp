@@ -27,7 +27,7 @@ $jdk_package_name = extlookup("jdk_package_name", "jdk")
 # We set this varialbe for sanity check. Only hosts
 # inside Puppet environment 'environment name' have to entry
 # in this catalog.
-$environment_match = Puppet.lookup(:current_environment)
+$environment_match = inline_template("<%= Puppet.lookup(:current_environment) %>")
 
 # This selector is designed in order to handle three kind of 
 # operational enviroments or clusters:
