@@ -25,10 +25,10 @@ $jdk_package_name = extlookup("jdk_package_name", "jdk")
 
 # 
 # We set this varialbe for sanity check. Only hosts
-# inside Puppet environment 'production' have to entry
+# inside Puppet environment 'environment name' have to entry
 # in this catalog.
 #
-$environment_match = 'production'
+$environment_match = extlookup("environment_match")
 
 # This selector is designed in order to handle three kind of 
 # operational enviroments or clusters:
