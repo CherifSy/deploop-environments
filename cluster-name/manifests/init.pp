@@ -15,7 +15,7 @@
 
 require utils
 # Base configuration variables
-$extlookup_datadir=inline_template("<%= Puppet.lookup(:current_environment) %>/extdata")
+$extlookup_datadir=inline_template("/etc/puppet/environments/<%= Puppet.lookup(:current_environment) %>/extdata")
 $extlookup_precedence = ["site", "default"]
 
 # defaults
