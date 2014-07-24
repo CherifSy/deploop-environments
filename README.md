@@ -1,5 +1,5 @@
 Puppet Enviroments for Deploop System
-=====================================
+--------------------------------------
 
     /etc/puppet/environments/
     ├── all
@@ -28,4 +28,4 @@ Puppet Enviroments for Deploop System
 Deploop environments Buildoop relation
 --------------------------------------
 
-![Image](https://github.com/deploop/deploop-environments/blob/master/doc/deploop-environments.jpg?raw=true)
+![Image](doc/deploop-environments.jpg?raw=true)
