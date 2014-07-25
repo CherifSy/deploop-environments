@@ -20,7 +20,7 @@
 
   <property>
     <name>dfs.namenode.name.dir</name>
-    <value>/cluster/data/dfs/nn</value>
+    <value>/cluster/data/1/dfs/nn</value>
     <final>true</final>
     <description>Determines where on the local filesystem the DFS name node 
     should store the name table(fsimage). If this is a comma-delimited
