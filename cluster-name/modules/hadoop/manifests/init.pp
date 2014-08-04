@@ -238,10 +238,15 @@ class hadoop_files_keytab {
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
-    $roots = extlookup("datanode_data_dirs") 
+
+    # The host set up the storage locations by means of fact.
+    $roots              = extlookup("hadoop_storage_dirs",       split($hadoop_storage_locations, ";"))
+    
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
     $nodemanager_log_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/logs", $roots))
     $nodemanager_local_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/local", $roots))
+    $namenode_fsimage_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/nn", $roots))
+    $journal_edits_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/jn", $roots))
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
     #
@@ -330,10 +335,13 @@ class hadoop_files_keytab {
     $hadoop_namenode_nn1 = extlookup('hadoop_namenode_nn1')
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
-    $roots = extlookup("datanode_data_dirs") 
+
+    
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
     $nodemanager_log_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/logs", $roots))
     $nodemanager_local_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/local", $roots))
+    $namenode_fsimage_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/nn", $roots))
+    $journal_edits_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/jn", $roots))
     info("[deploop] DataNode datadirs: $namenode_data_dirs")  
 
     #

@@ -20,9 +20,28 @@ class batch_path {
         info("[deploop][${fqdn}] DataNode role")
         include hadoop_dn
       }
+
+      #
+      # Serving Layer on top of Batch Layer:
+      # This roles are handled by the Speed Layer itself.
+      # This code is only for logging and sanity checking.
+      #
+
+      # HBase
       hbase-master: {
-        info("[deploop][${fqdn}] Hbase Master role")
+        info("[deploop][${fqdn}] Hbase Master role handled by serving layer")
       }
+      hbase-region-server: {
+        info("[deploop][${fqdn}] Hbase Region Server role handled by serving layer")
+      }
+      # ElasticSearch
+      es-master: {
+        info("[deploop][${fqdn}] ElasticSearch Master role handled by serving layer")
+      }
+      es-data: {
+        info("[deploop][${fqdn}] ElasticSearch Data role handled by serving layer")
+      }
+
       default: {
         info("[deploop][${fqdn}] ERROR undefined role: ${deploop_role}")
       }
