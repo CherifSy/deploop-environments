@@ -336,6 +336,8 @@ class hadoop_files_keytab {
     $hadoop_namenode_nn2 = extlookup('hadoop_namenode_nn2')
     $hadoop_resourcemanager = extlookup('hadoop_resourcemanager')
 
+    # The host set up the storage locations by means of fact.
+    $roots              = extlookup("hadoop_storage_dirs",       split($hadoop_storage_locations, ";"))
     
     $namenode_data_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/dfs/dn", $roots))
     $nodemanager_log_dirs = extlookup("hadoop_namenode_data_dirs", append_each("/yarn/logs", $roots))

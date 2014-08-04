@@ -31,14 +31,14 @@ class batch_path {
       hbase-master: {
         info("[deploop][${fqdn}] Hbase Master role handled by serving layer")
       }
-      hbase-region-server: {
+      hbase-worker: {
         info("[deploop][${fqdn}] Hbase Region Server role handled by serving layer")
       }
       # ElasticSearch
-      es-master: {
+      elasticsearch-master: {
         info("[deploop][${fqdn}] ElasticSearch Master role handled by serving layer")
       }
-      es-data: {
+      elasticsearch-worker: {
         info("[deploop][${fqdn}] ElasticSearch Data role handled by serving layer")
       }
 
