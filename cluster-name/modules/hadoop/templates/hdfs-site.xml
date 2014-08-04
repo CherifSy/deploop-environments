@@ -20,7 +20,7 @@
 
   <property>
     <name>dfs.namenode.name.dir</name>
-    <value>/cluster/data/1/dfs/nn</value>
+    <value><%= @namenode_fsimage_dirs.join(",") %></value>
     <final>true</final>
     <description>Determines where on the local filesystem the DFS name node 
     should store the name table(fsimage). If this is a comma-delimited
@@ -98,7 +98,7 @@
 
   <property>
     <name>dfs.journalnode.edits.dir</name>
-    <value>/cluster/data/1/dfs/jn</value>
+    <value><%= @journal_edits_dirs.join(",") %></value>
     <description>The path where the JournalNode daemon will store its 
     local state. On each JournalNode machine.</description>
   </property>
