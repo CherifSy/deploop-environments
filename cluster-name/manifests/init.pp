@@ -29,30 +29,23 @@ $jdk_package_name = extlookup("jdk_package_name", "jdk")
 # in this catalog.
 $environment_match = inline_template("<%= Puppet.lookup(:current_environment) %>")
 
-# This selector is designed in order to handle three kind of 
-# operational enviroments or clusters:
-#
-#  - The batch cluster
-#  - The online or realtime cluster.
-#  - The bus collector cluster.
-#
-# Note: this configuration of environments is based on facts, which
-# are dinamycs in Deploop. 
-node default {
-  case $::deploop_collection {
-    $environment_match: {
-      case $::deploop_category {
+define parsecategories {
+    case $name {
         batch: {
-          info("[deploop][${fqdn}] Node in Production=>Batch path category")
+          info("[deploop][${fqdn}] Node in [environment] -> ${environment_match} [category] -> ${name}")
           include batch_path
         }
-        realtime: {
-          info("[deploop][${fqdn}] Node in Production=>RealTime path category")
+        speed: {
+          info("[deploop][${fqdn}] Node in [environment] -> ${environment_match} [category] -> ${name}")
           include realtime_path
         }
         bus: {
-          info("[deploop][${fqdn}] Node in Production=>Bus path category")
+          info("[deploop][${fqdn}] Node in [environment] -> ${environment_match} [category] -> ${name}")
           include bus_path
+        }
+        serving: {
+          info("[deploop][${fqdn}] Node in [environment] -> ${environment_match} [category] -> ${name}")
+          include serving_path
         }
         kdc: {
           # This category is only for deploy KDC in the Deploop Master node or
@@ -63,13 +56,32 @@ node default {
         default: {
           info("[deploop][${fqdn}] ERROR uncategorized Production node")
         }
+
       }
+}
+
+# This selector is designed in order to handle three kind of 
+# operational enviroments or clusters:
+#
+#  - The batch cluster
+#  - The online or realtime cluster.
+#  - The bus collector cluster.
+#
+# Note: this configuration of environments is based on facts, which
+# are dinamycs in Deploop. 
+node default {
+
+  case $::deploop_collection {
+    $environment_match: {
+      $array_of_categories = split($deploop_category, ' ')
+      parsecategories { $array_of_categories: }
     }
     default: {
-      info("[deploop][${fqdn}] ERROR no Production collection for this node")
+      info("[deploop][${fqdn}] ERROR no valid collection for this node")
       info("[deploop][${fqdn}] ERROR the deploop_collection fact is: ${deploop_collection}")
     }
   }
+
 }
 
 # vim: autoindent tabstop=2 shiftwidth=2 expandtab softtabstop=2 filetype=ruby
