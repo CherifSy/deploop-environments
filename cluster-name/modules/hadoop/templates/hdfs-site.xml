@@ -130,6 +130,24 @@
     <description>This specifies that the cluster should be set up for automatic failover</description>
   </property>
 
+
+  <!-- HUE configuration staff -->
+
+  <!--property>
+    <name>dfs.webhdfs.enabled</name>
+    <value>true</value>
+    <description>Hue can use either of the following to access HDFS data: WebHDFS 
+        provides high-speed data transfer with good locality because clients 
+        talk directly to the DataNodes inside the Hadoop cluster. HttpFS is a 
+        proxy service appropriate for integration with external systems that are 
+        not behind the cluster's firewall. Both WebHDFS and HttpFS use the HTTP 
+        REST API so they are fully interoperable, but Hue must be configured to 
+        use one or the other. For HDFS HA deployments, you must use HttpFS.
+        We prefere use HttpFS, however if you want to use WebHDFS you have to
+        put this variable to true.
+    </description>
+  </property-->
+
   <% if @hadoop_security_authentication == "kerberos" %>
   <!--                               -->
   <!-- Hadoop Secure Mode - KERBEROS -->
