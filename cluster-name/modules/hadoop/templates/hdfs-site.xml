@@ -80,16 +80,16 @@
 
   <property>
     <name>dfs.namenode.http-address.<%= @nameservice_id %>.nn1</name>
-    <value><%= @hadoop_namenode_nn1 %>:50070</value>
+    <value>0.0.0.0:50070</value>
     <description>The fully-qualified HTTP address for each NameNode
-    to listen on</description>
+    to listen on. 0.0.0.0 for listen in all interfaces</description>
   </property>
 
   <property>
     <name>dfs.namenode.http-address.<%= @nameservice_id %>.nn2</name>
-    <value><%= @hadoop_namenode_nn2 %>:50070</value>
+    <value>0.0.0.0:50070</value>
     <description>The fully-qualified HTTP address for each NameNode
-    to listen on</description>
+    to listen on. 0.0.0.0 for listen in all interfaces</description>
   </property>
 
   <property>
