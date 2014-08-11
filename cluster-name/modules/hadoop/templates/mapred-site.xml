@@ -24,14 +24,24 @@
 		MapReduce jobs. Can be one of local, classic or yarn.</description>
 	</property>
 
+    <!--
+    MRv2 uses only uses a single Mapreduce Job History Server.  
+    It can run on any node, including a dedicated node of its own, 
+    but traditionally runs on the same node as the resourcemanager.
+    -->
+
 	<property>
 		<name>mapreduce.jobhistory.address</name>
-    <value><%= @hadoop_resourcemanager %>:10020</value>
+        <value><%= @hadoop_resourcemanager %>:10020</value>
+        <description>MapReduce JobHistory Server host:port Default 
+            port is 10020</description>
 	</property>
 
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-    <value><%= @hadoop_resourcemanager %>:19888</value>
+        <value><%= @hadoop_resourcemanager %>:19888</value>
+        <description>MapReduce JobHistory Server Web UI host:port 
+            Default port is 19888.</description>
 	</property>
 
 	<property>
